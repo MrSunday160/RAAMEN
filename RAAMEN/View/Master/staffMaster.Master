@@ -1,0 +1,34 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="staffMaster.master.cs" Inherits="RAAMEN.View.Master.staffMaster" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+
+            <h1>This is staff master</h1>
+            <a href="../Staff/staffHome.aspx">Home</a>
+            &nbsp
+            <a href="../Staff/manageRamen.aspx">Manage Ramen</a>
+            &nbsp
+            <a href="../Staff/orderQueue.aspx">Order Queue</a>
+            &nbsp
+            <a href="../Staff/profile.aspx">Profile</a>
+            &nbsp
+            <asp:Button ID="logoutBtn" runat="server" Text="logout" OnClick="logoutBtn_Click"/>
+            &nbsp
+            <br />
+            <br />
+
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+</body>
+</html>

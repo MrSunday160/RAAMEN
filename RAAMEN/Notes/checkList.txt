@@ -1,0 +1,13 @@
+﻿[x] Login
+[x] Register
+	[x]Connect to db
+[] Home (landing page)
+[] Order
+[] Profile
+[] History
+[] Transaction Detail
+[] Manage Ramen
+[] Insert ramen
+[] update ramen
+[] Transaction queue
+[] transaction report

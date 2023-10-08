@@ -1,0 +1,52 @@
+﻿using RAAMEN.Repository.Staff;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace RAAMEN.View.Staff {
+	public partial class staffHome : System.Web.UI.Page {
+		protected void Page_Load(object sender, EventArgs e) {
+
+			if(Session["user"] == null && Request.Cookies["roleCookie"] == null) {
+
+				Debug.WriteLine("not valid");
+				Response.Redirect("~/View/login.aspx");
+
+			}
+
+			else if(!"Staff".Equals(Session["user"]?.ToString()) &&
+		 !"Staff".Equals(Request.Cookies["roleCookie"]?.Value)) { // use null-conditional operator to access value safely
+
+				Debug.WriteLine("wrong role");
+
+				// reset cookie and session
+				HttpCookie cookie = new HttpCookie("roleCookie");
+				cookie.Expires = DateTime.Now.AddDays(-1);
+				Response.Cookies.Add(cookie);
+				Session["user"] = null;
+
+				HttpCookie userIdCookie = new HttpCookie("userIdCookie");
+				userIdCookie.Expires = DateTime.Now.AddDays(-1);
+				Response.Cookies.Add(userIdCookie);
+				Session["userId"] = null;
+
+				Response.Redirect("~/View/login.aspx");
+
+			}
+
+			//Debug.WriteLine("masuk");
+
+			if(!IsPostBack) {
+
+				gvMember.DataSource = staffHomeRepository.getAllMember();
+				gvMember.DataBind();
+
+			}
+
+		}
+	}
+}

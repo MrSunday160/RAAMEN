@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="df795bdde2f94fdcbe7f151d46ef70ce" Name="Diagram1" ZoomLevel="85">
+        <EntityTypeShape EntityType="localDBModel.Detail" Width="1.5" PointX="7.5" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="localDBModel.Header" Width="1.5" PointX="5.25" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="localDBModel.Meat" Width="1.5" PointX="3" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="localDBModel.RamenDetail" Width="1.5" PointX="5.25" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="localDBModel.Role" Width="1.5" PointX="0.75" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="localDBModel.User" Width="1.5" PointX="3" PointY="3.5" IsExpanded="true" />
+        <AssociationConnector Association="localDBModel.FK__Detail__Quantity__4316F928" ManuallyRouted="false" />
+        <AssociationConnector Association="localDBModel.FK__Detail__ramenID__440B1D61" ManuallyRouted="false" />
+        <AssociationConnector Association="localDBModel.FK__Header__customer__3B75D760" ManuallyRouted="false" />
+        <AssociationConnector Association="localDBModel.FK__RamenDeta__meatI__403A8C7D" ManuallyRouted="false" />
+        <AssociationConnector Association="localDBModel.FK__Users__roleID__38996AB5" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="localDBModel.Cart" Width="1.5" PointX="7.5" PointY="3.75" />
+        <AssociationConnector Association="localDBModel.FK__Cart__headerID__787EE5A0" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,409 @@
+﻿June 1, 19:29
+	left at login page
+	validation done
+	remember me cookies done
+		need to check again whether works or not, so far ok
+
+	register page done
+	validation done
+
+	TO DO:
+	Nav bar (master file)
+		implementation with roles system
+			make multiple master file for multiple roles
+
+
+	! pages for each roles (check with document) !
+		especially after login and role validation
+
+	home page
+	order page
+	profile page
+	history page
+	transaction detail page
+	manage page
+	insert page
+	update page
+	transaction queue
+	transaction report using crystal report
+
+
+June 2 11:17
+	completed 
+		nav bar for staff
+		staff home page
+
+		manage ramen page (using shared repository, different nav bar)
+		update ramen page not done
+
+	ongoing pages for each roles
+
+	checking again with roles and cookies [x]
+		
+		solution:
+
+		Session["user"] = roleTemp; 
+
+		hold roleTemp in Seseion["user"]
+		similar to temp memory for the whole sesion
+
+		HttpCookie cookie = new HttpCookie("roleCookie");
+		cookie.Value = roleTemp;
+		cookie.Expires = DateTime.Now.AddSeconds(1); // can change
+		Response.Cookies.Add(cookie);
+
+		set cookie to hole roleTemp value
+		to access cookie:
+		if(Session["user"] == null && Request.Cookies["roleCookie"] == null) {
+
+				Debug.WriteLine("not valid");
+				Response.Redirect("~/View/login.aspx");
+
+			}
+
+		check if Session is empty and cookie is empty
+		then redirect to login
+		just implement on page_load on all staff pages
+
+		when logging out, on staffMaster
+
+		HttpCookie cookie = new HttpCookie("roleCookie");
+			cookie.Expires = DateTime.Now.AddDays(-1);
+			Response.Cookies.Add(cookie);
+			Session["user"] = null;
+
+		set everything to null
+		no cookies
+		no session
+
+		KNOWN ISSUES
+		using Session[] may cause problems when loading role pages after closing session
+		need to check again
+
+		TO DO:
+		nav bar for rest roles
+		
+		pages for rest of roles
+		etc2
+		see June 1 todo
+
+	June 4 ~13:30
+		completed
+			profile page for staff
+
+				can be done by storingthe loggied in user's userId into a new cookie, same with normal
+				nullify when logged out
+
+			can be reimplemented on other roles
+
+			NOTES TO SELF
+			when using grid view to get data for the current account logged in
+
+				// use Session[] so that if remember me not selected, still can access
+				int userId = (int)Session["userId"];
+
+				gvProfile.DataSource = staffProfileRepository.getUser(userId);
+				gvProfile.DataBind();
+
+			using Session[] will make sure that when remember me is not selected, funtion still runs
+
+		TODO:
+		insert & update ramen page
+		delete ramen function button or smth idk
+
+		see previous todos
+
+	June 4 ~19:00
+		completed
+			insert ramen page
+			delete function in manageRamen page
+
+		new solution for cookies and session stuff
+
+		if(Session["user"] == null && Request.Cookies["roleCookie"] == null) {
+
+				Debug.WriteLine("not valid");
+				Response.Redirect("~/View/login.aspx");
+
+			}
+
+			else if(!"Staff".Equals(Session["user"]?.ToString()) &&
+		 !"Staff".Equals(Request.Cookies["roleCookie"]?.Value)) { // use null-conditional operator to access value safely
+
+				Debug.WriteLine("wrong role");
+				Response.Redirect("~/View/login.aspx");
+
+			}
+
+		essentially check if Session["user"] and role cookie is equal to staff by using null-conditional
+
+		new solution for profile grid view
+
+		// if remember me not selected, use Session userId
+			if(Request.Cookies["userIdCookie"] == null) { // cookie not set (remember me not selected)
+
+				int userId = (int)Session["userId"];
+				gvProfile.DataSource = staffProfileRepository.getUser(userId);
+				gvProfile.DataBind();
+
+			}
+
+			else {
+
+				int userId = int.Parse(Request.Cookies["userIdCookie"].Value);
+				gvProfile.DataSource = staffProfileRepository.getUser(userId);
+				gvProfile.DataBind();
+
+			}
+
+		essentially check if remember me not selected, use Session["userId"]
+		if remember me selected, then use the cookie
+
+		added orderStatus column to Detail table for ordering systems
+
+		TODO:
+		order queue page
+		update page, and the rest hehe lmao
+
+	June 5 ~14:50
+		Completed
+		update page and som fixes
+
+		todo:
+		admin pages
+		member pages
+		glhf hehe
+		tired sleep now
+
+	June 5 ~17:50
+
+		Recoded profile back end to be reusable
+
+		protected int getUserId() {
+
+			if(Request.Cookies["userIdCookie"] == null)  // cookie not set (remember me not selected)
+				return (int)Session["userId"];
+
+			else // remember me selected
+				return int.Parse(Request.Cookies["userIdCookie"].Value);
+
+		}
+
+		make new method to return userId based on the input from login
+		so that it's reusable
+		veri nais :)
+		just copas to other role pages
+
+		recoded on page load stuff
+
+		else if(!"Staff".Equals(Session["user"]?.ToString()) &&
+		 !"Staff".Equals(Request.Cookies["roleCookie"]?.Value)) { // use null-conditional operator to access value safely
+
+				Debug.WriteLine("wrong role");
+
+				// reset cookie and session
+				HttpCookie cookie = new HttpCookie("roleCookie");
+				cookie.Expires = DateTime.Now.AddDays(-1);
+				Response.Cookies.Add(cookie);
+				Session["user"] = null;
+
+				HttpCookie userIdCookie = new HttpCookie("userIdCookie");
+				userIdCookie.Expires = DateTime.Now.AddDays(-1);
+				Response.Cookies.Add(userIdCookie);
+				Session["userId"] = null;
+
+				Response.Redirect("~/View/login.aspx");
+
+			}
+
+		resets Session[] and cookie if found trespassing hehe >:)
+
+		most admin pages done
+
+		To DO:
+		admin:
+			History - read again because has specific requirements
+			Report - uses crystal report, need to learn!!!
+
+		Member pages
+
+		so far alrd like 69% done? hehe
+		cmon bruh almost there lesgo solo queue ezclap zzz
+
+	June 6 ~20:00
+		
+		created a new viewmodel class headerDetailViewModel inside ViewModel folder
+		this class consists of variables from Header and Detail table, in which can then
+		be used to join both of the table into one single class
+		used to join both table later on for the gridview getData() -> check orderQueueRepository
+		// scrap the part about Detail table, the rest still ok
+
+		whacky, but works... so no complains
+
+		recoded Detail table, removed orderStatus column
+		created new Cart table holding headerID as foreign key, orderID as primary
+		and orderStatus
+
+		orderQueue page readjusted to new db schema, especially the updat gimmick
+
+		viewmodel class readjusted after changing db schema
+
+		all still looks good so far
+
+		completed:
+			orderQueueRepository for getting data from 2 tables by creating
+			a viewmodel class. see explanation above
+			as well as the update gimmick
+			
+		STUCK ON history page, issues with button for each rows, tired so contiue
+		tomorrow
+
+		TODO:
+			Report page
+			Member's pages,
+				for Order page, can use new Cart table, pay attention to other table
+				dependancies (pk and fk)
+				adding values to multiple tables
+				remember factory class!!!
+
+	June 7 ~19:30
+
+		FOUND SOLUTIONN for the issue yesterday !!
+
+		just use 
+		if(!IsPostBack) {
+
+				gvHeader.DataSource = historyRepository.getAllHeader();
+				gvHeader.DataBind();
+
+			}
+		inside page load -_-
+
+		cast 'sender' object into a Button type
+		get CommandArgument value from the casted 'sender'
+
+		protected void viewDetailBtn_Click(object sender, EventArgs e) {
+
+			Button viewDetailBtn = (Button)sender; // hold viewDetailButton by casting sender object to Button type
+												   // in this case, holds the button when pressed as an object, allowing access to Button's properties
+
+			string id = viewDetailBtn.CommandArgument; // holds the CommandArgument property of the button.
+													   // uses <%# Eval("ID") %> to get ID value from the row
+
+			Debug.WriteLine(id);
+
+			Response.Redirect("orderDetail.aspx?id=" + id);
+
+		}
+
+		like that
+
+		zzzzzzzzz stres semalem doang cmn salah di page load -_-
+
+		reconfigured all pages to use !IsPostBack for gridviews
+
+		for the histroy page:
+			front end only display ID, customerID, staffID, Date, and orderStatus
+		
+		This can be done because the repository returns
+			ID = x.ID
+			customerID = x.customerID
+			staffID = x.staffID
+			Date = x.Date
+			orderStatus = z.orderStatus
+
+		so that when gridview datasource is set, it indicates that the DataField="ID"
+		data source is the x.ID from repository
+
+		basically: front end = repository return values
+
+		For order,
+			we can spam Detail table as long as we refer the headerID to the ID
+			from Header table
+
+		For cart,
+			we can use session, store the values accordingly to the Header and Detail
+			if want to save, move Session values to db, then save changes
+
+		ONGOING:
+			cart system using Session[]
+
+			what works is that getting data from Session[] to the grid view
+
+			what needs solution is that storing datas from cartViewModel into the Session[]
+			by using a factory to fill in the data, then return it
+
+			WEAITTT
+			DID ITTTT!!!!!!!!!!! LESGOOOOOOO
+
+			cart system basically found a solution
+			make sure Session["cart"] is a cartViewModel List type
+
+			use factory and return data type cartViewModel, same with Session[]
+
+			from factory,
+				call repository to hold dataTemp from db, so that we can asign
+				the data inside Session[] (cartViewModel) according to the db
+
+				this is valid because Session is a List using cartViewModel datas type,
+				we .Add() into Session[] with cartViewModel datas, thats why
+
+			WOWW
+
+			just need to clean some stuff, then find a way to 
+			move into db Header table
+
+			essentially, we only need the ramenId, qty, and
+			userId (can use cookies or Session["user"] for the Header db;
+			which can be found already.
+
+			oh yea, i think that cartViewModel have uneccesary variables
+			check if i can delete those
+
+		June 8 ~20:00
+
+			OMGG DONEE for order ramen gimmickk
+			to add to the db, use foreach
+
+			int headerId = orderRamenHandler.insertHeader(db, userId);
+
+			// insert new cart using headerID, so that cart is only created once, not repetetive
+			orderRamenHandler.insertCart(db, headerId);
+
+			foreach (cartViewModel cartItem in cart) {
+
+				int ramenId = cartItem.ramenID;
+				int quantity = cartItem.Quantity;
+				
+				// call handler to insert into detail and cart table
+				orderRamenHandler.insertRamen(db, headerId, quantity, ramenId);
+
+			}
+
+			here, we add Header table first, then return the ID of the inserted 
+			header
+
+			then add Cart table
+
+			we add these outside of the loop so that it's done once
+
+			then do foreach loop from the Session[cart] and take the neccessary value
+			then send it to handler
+
+			handler call factory to do the thigny
+
+			and DONEE!!!
+
+			pls no mor error
+
+			history page and orderDetail for member DONE
+
+			Known issues:
+				orderDetail page on both member and admin display all the details for 
+				the corresponding headerID, so if headerID is used multple times
+				(multiple ramens in 1 order), then will show all
+				need to check again
+
+			TODO:
+				admin Report page, using crystal report
+				learn how to do this bit first!!!
